@@ -1,12 +1,25 @@
 import { expect, it, describe } from "vitest";
 import { Equal, Expect } from "../helpers/type-utils";
 
-export const getHomePageFeatureFlags = (
-  config: unknown,
-  override: (flags: unknown) => unknown
-) => {
-  return override(config.rawConfig.featureFlags.homePage);
+type configShape = {
+  rawConfig: {
+    featureFlags: {
+      homePage: hpFlagShape;
+    };
+  };
 };
+
+type hpFlagShape = {
+  showBanner: boolean;
+  showLogOut: boolean;
+};
+
+export function getHomePageFeatureFlags<TConfig extends configShape>(
+  config: TConfig,
+  override: (flags: hpFlagShape) => hpFlagShape
+) {
+  return override(config.rawConfig.featureFlags.homePage);
+}
 
 describe("getHomePageFeatureFlags", () => {
   const EXAMPLE_CONFIG = {
@@ -18,6 +31,7 @@ describe("getHomePageFeatureFlags", () => {
         homePage: {
           showBanner: true,
           showLogOut: false,
+          showFooter: false,
         },
         loginPage: {
           showCaptcha: true,
@@ -31,7 +45,6 @@ describe("getHomePageFeatureFlags", () => {
       EXAMPLE_CONFIG,
       (defaultFlags) => defaultFlags
     );
-
     expect(flags).toEqual({
       showBanner: true,
       showLogOut: false,
