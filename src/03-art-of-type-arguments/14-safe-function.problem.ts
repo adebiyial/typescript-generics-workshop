@@ -2,18 +2,12 @@ import { expect, it } from "vitest";
 import { Equal, Expect } from "../helpers/type-utils";
 
 const makeSafe =
-  (func: unknown) =>
+  <TParam extends Array<any>, TReturn>(func: (...args: TParam) => TReturn) =>
   (
-    ...args: unknown
+    ...args: TParam
   ):
-    | {
-        type: "success";
-        result: unknown;
-      }
-    | {
-        type: "failure";
-        error: Error;
-      } => {
+    | { type: "success"; result: TReturn }
+    | { type: "failure"; error: Error } => {
     try {
       const result = func(...args);
 
@@ -52,7 +46,7 @@ it("Should return the result with a { type: 'success' } on a successful call", (
             error: Error;
           }
       >
-    >,
+    >
   ];
 });
 
@@ -84,11 +78,14 @@ it("Should return the error on a thrown call", () => {
             error: Error;
           }
       >
-    >,
+    >
   ];
 });
 
 it("Should properly match the function's arguments", () => {
+  const X = (a: number, b: string) => {
+    return `${a} ${b}`;
+  };
   const func = makeSafe((a: number, b: string) => {
     return `${a} ${b}`;
   });
