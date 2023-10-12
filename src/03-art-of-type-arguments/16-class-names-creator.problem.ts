@@ -1,9 +1,40 @@
 import { expect, it } from "vitest";
 import { Equal, Expect } from "../helpers/type-utils";
 
+// The function takes a list of classes that returns a function that returns a string
+// function createClassNamesFactory<TClasses extends {
+//   primary: string,
+//   secondary: string
+// }>(classes: TClasses) {
+//   return (type: keyof TClasses, ...otherClasses: string[]) => {
+//     const classList = [classes[type], ...otherClasses];
+//     return classList.join(" ");
+//   }
+// }
+
+// const createClassNamesFactory0 =
+//   <TClass extends string>(classes: Record<TClass, string>) =>
+//   (type: TClass, ...otherClasses: string[]) => {
+//     const classList = [classes[type], ...otherClasses];
+//     return classList.join(" ");
+//   };
+
+// const createClassNamesFactory1 =
+//   <TClasses extends { [key: string]: string }>(classes: TClasses) =>
+//   (type: keyof TClasses, ...otherClasses: string[]) => {
+//     const classList = [classes[type], ...otherClasses];
+//     return classList.join(" ");
+//   };
+// const createClassNamesFactory2 =
+//   <TClasses extends { string: string }>(classes: TClasses) =>
+//   (type: keyof TClasses, ...otherClasses: string[]) => {
+//     const classList = [classes[type], ...otherClasses];
+//     return classList.join(" ");
+//   };
+
 const createClassNamesFactory =
-  (classes: unknown) =>
-  (type: unknown, ...otherClasses: unknown[]) => {
+  <TClasses extends Record<string, string>>(classes: TClasses) =>
+  (type: keyof TClasses, ...otherClasses: string[]) => {
     const classList = [classes[type], ...otherClasses];
     return classList.join(" ");
   };
