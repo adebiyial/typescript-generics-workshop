@@ -1,7 +1,8 @@
 import { it } from "vitest";
 import { Equal, Expect } from "../helpers/type-utils";
 
-function returnWhatIPassInExceptFor1(t: unknown): unknown {
+function returnWhatIPassInExceptFor1<T>(t: T): T extends 1 ? 2 : T
+function returnWhatIPassInExceptFor1(t: unknown) {
   if (t === 1) {
     return 2;
   }
